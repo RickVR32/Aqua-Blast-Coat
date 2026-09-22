@@ -1,0 +1,407 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Coat &amp; Blast | Powder coating, sandblasting and aqua blasting</title>
+<meta name="description" content="Powder coating, sandblasting and aqua blasting for wheels, frames, gates, furniture and more. Get a quote today.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@800&family=Hanken+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --slag: #23262A;
+    --gunmetal: #2B2E31;
+    --steel: #B9BCBE;
+    --primer: #E4E5E6;
+    --chalk: #F4F4F3;
+    --ink: #1E2124;
+    --muted: #3A3E42;
+    --accent: #F2B705; /* change this one value to restyle every button */
+    --display: 'Big Shoulders Display', Impact, sans-serif;
+    --body: 'Hanken Grotesk', system-ui, sans-serif;
+    --pad: clamp(20px, 5.5vw, 80px);
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { margin: 0; font-family: var(--body); color: var(--ink); background: var(--chalk); line-height: 1.5; }
+  a { color: inherit; }
+  a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible { outline: 3px solid #2F6FEB; outline-offset: 2px; }
+  h1, h2, h3 { font-family: var(--display); font-weight: 800; margin: 0; line-height: 1; }
+  h2 { font-size: clamp(40px, 5vw, 64px); }
+  p { margin: 0; }
+
+  .btn { display: inline-flex; align-items: center; justify-content: center; min-height: 48px; padding: 0 28px; border-radius: 4px; border: 0; background: var(--accent); color: var(--ink); font: 600 17px var(--body); text-decoration: none; cursor: pointer; }
+  .btn.ghost { background: transparent; border: 1px solid #8C9095; color: var(--chalk); }
+  .btn.big { min-height: 56px; padding: 0 32px; font-size: 18px; }
+
+  /* Header */
+  header.site { background: var(--slag); padding: 0 var(--pad); min-height: 88px; display: flex; align-items: center; justify-content: space-between; gap: 24px; flex-wrap: wrap; }
+  .logo { font-family: var(--display); font-weight: 800; font-size: 38px; line-height: 1; color: var(--chalk); text-decoration: none; }
+  header.site nav { display: flex; align-items: center; gap: 32px; flex-wrap: wrap; }
+  header.site nav a:not(.btn) { color: #D5D7D8; font-weight: 500; font-size: 17px; text-decoration: none; }
+  header.site nav a.ext { text-decoration: underline; }
+
+  /* Hero */
+  .hero { background: var(--slag); color: var(--chalk); padding: 40px var(--pad) 72px; display: grid; grid-template-columns: 1fr minmax(0, 560px); gap: 64px; align-items: center; }
+  .hero h1 { font-size: clamp(56px, 8vw, 104px); line-height: .95; }
+  .hero p.lead { margin-top: 28px; max-width: 560px; font-size: 21px; color: #D5D7D8; }
+  .hero .actions { margin-top: 28px; display: flex; gap: 16px; flex-wrap: wrap; }
+  /* Rusty / blasted / coated slider */
+  .slider { position: relative; width: 100%; max-width: 528px; aspect-ratio: 1 / 1; border-radius: 4px; overflow: hidden; background: #1a1c1e; touch-action: none; user-select: none; }
+  .slider img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; pointer-events: none; }
+  .slider .clip { position: absolute; inset: 0; overflow: hidden; }
+  .slider .handle { position: absolute; top: 0; bottom: 0; width: 3px; background: var(--chalk); box-shadow: 0 0 0 1px rgba(0,0,0,.3); cursor: ew-resize; }
+  .slider .handle::after { content: '↔'; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 44px; height: 44px; border-radius: 50%; background: var(--chalk); color: var(--ink); display: flex; align-items: center; justify-content: center; font-size: 18px; box-shadow: 0 2px 8px rgba(0,0,0,.35); }
+  .slider .tag-lbl { position: absolute; bottom: 14px; padding: 6px 14px; border-radius: 999px; font: 600 14px var(--body); background: rgba(30,33,36,.72); color: var(--chalk); }
+  .slider .tag-left { left: 14px; }
+  .slider .tag-right { right: 14px; }
+  .stage-picker { margin-top: 16px; display: flex; gap: 10px; }
+  .stage-picker button { min-height: 40px; padding: 0 18px; border-radius: 999px; border: 1px solid #6B7075; background: transparent; color: var(--chalk); font: 600 15px var(--body); cursor: pointer; }
+  .stage-picker button[aria-pressed="true"] { background: var(--chalk); color: var(--ink); border-color: var(--chalk); }
+
+  /* Sections */
+  section.block { padding: 88px var(--pad); }
+  section.block .sub { margin-top: 16px; max-width: 640px; font-size: 20px; color: var(--muted); }
+  #gallery { background: var(--primer); }
+  #work { background: var(--chalk); }
+  #services { background: var(--primer); }
+
+  .chips { display: flex; gap: 12px; margin-top: 32px; flex-wrap: wrap; }
+  .chip { min-height: 44px; padding: 0 22px; border-radius: 999px; border: 1px solid #6B7075; background: transparent; color: var(--slag); font: 600 16px var(--body); cursor: pointer; }
+  .chip[aria-pressed="true"] { background: var(--slag); border-color: var(--slag); color: var(--chalk); }
+
+  .grid4 { margin-top: 32px; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); grid-auto-rows: 280px; gap: 20px; }
+  .tile { border-radius: 4px; padding: 20px; display: flex; flex-direction: column; justify-content: space-between; background-size: cover; background-position: center; }
+  .tile[hidden] { display: none; }
+  .tile .tag { align-self: flex-start; padding: 4px 12px; border-radius: 999px; border: 1px solid currentColor; font-size: 14px; font-weight: 600; }
+  .tile h3 { font-size: 34px; }
+  .tile p { margin-top: 8px; font-size: 15px; font-weight: 500; }
+  .light { color: var(--chalk); }
+  .dark { color: var(--ink); }
+
+  .grid3 { margin-top: 40px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; }
+  .pair { display: flex; height: 340px; border-radius: 4px; overflow: hidden; }
+  .pair > div { flex: 1 1 0; padding: 16px; display: flex; flex-direction: column; justify-content: space-between; color: var(--ink); background-size: cover; background-position: center; }
+  .pair .before { background-color: #C9CBCC; }
+  .pair .after { background-color: #9EA2A6; }
+  .pair small { font-size: 14px; font-weight: 600; }
+  .pair b { font-size: 18px; }
+  .job-name { margin-top: 14px; font-size: 18px; font-weight: 600; }
+
+  .services { margin-top: 40px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; }
+  .service { padding: 36px; border-radius: 4px; }
+  .service h3 { font-size: 48px; }
+  .service p { margin-top: 20px; max-width: 520px; font-size: 18px; line-height: 1.55; }
+  .service ul { margin: 20px 0 0; padding-left: 20px; font-size: 18px; line-height: 1.7; }
+  .service.dark-bg { background: var(--gunmetal); color: var(--chalk); }
+  .service.dark-bg p { color: #D5D7D8; }
+  .service.mid-bg { background: var(--steel); color: var(--ink); }
+  .service.mid-bg p { color: var(--slag); }
+  .service.light-bg { background: var(--chalk); color: var(--ink); }
+  .service.light-bg p { color: var(--muted); }
+
+  .rev { background: var(--gunmetal); color: var(--chalk); padding: 32px var(--pad); display: flex; align-items: center; justify-content: space-between; gap: 24px; flex-wrap: wrap; }
+  .rev h2 { font-size: 40px; }
+  .rev p { margin-top: 8px; font-size: 18px; color: #D5D7D8; }
+
+  #quote { display: grid; grid-template-columns: minmax(0, 480px) minmax(0, 1fr); gap: 80px; }
+  #quote .sub { margin-top: 20px; }
+  form.quote { display: flex; flex-direction: column; gap: 20px; }
+  form.quote .row { display: flex; gap: 20px; }
+  form.quote label { flex: 1 1 0; display: flex; flex-direction: column; gap: 8px; font-size: 15px; font-weight: 600; }
+  form.quote input, form.quote select, form.quote textarea { min-height: 48px; padding: 0 14px; border: 1px solid #6B7075; border-radius: 4px; background: #fff; font: 400 17px var(--body); color: var(--ink); }
+  form.quote textarea { min-height: 110px; padding: 12px 14px; resize: vertical; }
+  form.quote input[type="file"] { padding: 10px 14px; border-style: dashed; background: var(--primer); font-size: 16px; }
+  form.quote .btn { align-self: flex-start; }
+  .form-note { font-size: 15px; color: var(--muted); }
+
+  footer.site { background: #1E2124; color: #D5D7D8; padding: 56px var(--pad); display: flex; justify-content: space-between; gap: 32px; flex-wrap: wrap; }
+  footer.site .logo { display: block; font-size: 40px; }
+  footer.site p { margin-top: 12px; font-size: 16px; }
+  footer.site a { color: var(--chalk); }
+  footer.site address { font-style: normal; font-size: 17px; line-height: 1.6; text-align: right; }
+
+  @media (max-width: 1100px) {
+    .grid4 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .hero { grid-template-columns: 1fr; gap: 40px; }
+    .services { grid-template-columns: 1fr; }
+    #quote { grid-template-columns: 1fr; gap: 40px; }
+  }
+  @media (max-width: 760px) {
+    header.site { padding-top: 16px; padding-bottom: 16px; }
+    header.site nav { gap: 16px 20px; }
+    .grid3, .services { grid-template-columns: 1fr; }
+    .grid4 { grid-auto-rows: 220px; }
+    form.quote .row { flex-direction: column; }
+    footer.site address { text-align: left; }
+    section.block { padding-top: 64px; padding-bottom: 64px; }
+    .service { padding: 28px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="site" id="top">
+  <a class="logo" href="#top">Coat &amp; Blast</a>
+  <nav aria-label="Main">
+    <a href="#gallery">Gallery</a>
+    <a href="#work">Our work</a>
+    <a href="#services">Services</a>
+    <a class="ext" href="https://rev-restore.co.uk">Motorbikes: Rev-Restore</a>
+    <a class="btn" href="#quote">Get a quote</a>
+  </nav>
+</header>
+
+<main>
+  <section class="hero" aria-labelledby="hero-title">
+    <div>
+      <h1 id="hero-title">Powder coating and blasting</h1>
+      <p class="lead">Powder coating, sandblasting and aqua blasting for wheels, frames, gates, furniture and more. Stripped back to clean metal, then finished in a tough, even coat.</p>
+      <div class="actions">
+        <a class="btn big" href="#quote">Get a quote</a>
+        <a class="btn big ghost" href="#gallery">See the gallery</a>
+      </div>
+    </div>
+    <!-- To use real photos: add style="background-image:url(img/rusty.jpg)" to each panel and delete the [YOUR PHOTO] labels -->
+    <div>
+      <!-- Drag/tap the handle to compare. Swap img sources in img/ for your own real photos later. -->
+      <div class="slider" id="wheel-slider" aria-label="Drag to compare the wheel before and after">
+        <img id="slider-right" src="img/wheel-coated.png" alt="Wheel finished in gloss black powder coat">
+        <span class="tag-lbl tag-right" id="tag-right">Coated</span>
+        <div class="clip" id="slider-clip" style="width:50%">
+          <img id="slider-left" src="img/wheel-rusty.png" alt="Rusted steel wheel before treatment">
+          <span class="tag-lbl tag-left" id="tag-left">Rusty</span>
+        </div>
+        <div class="handle" id="slider-handle" style="left:50%" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50" tabindex="0"></div>
+      </div>
+      <div class="stage-picker" role="group" aria-label="Choose stages to compare">
+        <button type="button" data-left="wheel-rusty.png" data-right="wheel-blasted.png" data-ll="Rusty" data-rl="Blasted">Rusty → Blasted</button>
+        <button type="button" data-left="wheel-blasted.png" data-right="wheel-coated.png" data-ll="Blasted" data-rl="Coated">Blasted → Coated</button>
+        <button type="button" data-left="wheel-rusty.png" data-right="wheel-coated.png" data-ll="Rusty" data-rl="Coated" aria-pressed="true">Rusty → Coated</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="block" id="gallery" aria-labelledby="gallery-title">
+    <h2 id="gallery-title">What we can coat</h2>
+    <p class="sub">Concept images showing the range of items and finishes. Photos of real jobs are further down.</p>
+
+    <div class="chips" role="group" aria-label="Filter gallery">
+      <button type="button" class="chip" data-filter="all" aria-pressed="true">All</button>
+      <button type="button" class="chip" data-filter="coat" aria-pressed="false">Powder coating</button>
+      <button type="button" class="chip" data-filter="blast" aria-pressed="false">Sandblasting</button>
+      <button type="button" class="chip" data-filter="aqua" aria-pressed="false">Aqua blasting</button>
+    </div>
+
+    <!-- Swap a tile's flat colour for a generated image: style="background-image:url(img/wheels.jpg)" -->
+    <div class="grid4">
+      <div class="tile light" data-kind="coat" style="background-color:#1F2123"><span class="tag">Concept image</span><div><h3>Alloy wheels</h3><p>Powder coating</p></div></div>
+      <div class="tile light" data-kind="coat" style="background-color:#4A4F54"><span class="tag">Concept image</span><div><h3>Frames</h3><p>Powder coating</p></div></div>
+      <div class="tile light" data-kind="coat" style="background-color:#35503F"><span class="tag">Concept image</span><div><h3>Gates and railings</h3><p>Powder coating</p></div></div>
+      <div class="tile light" data-kind="coat" style="background-color:#2F5D8A"><span class="tag">Concept image</span><div><h3>Garden furniture</h3><p>Powder coating</p></div></div>
+      <div class="tile light" data-kind="coat" style="background-color:#9E2B25"><span class="tag">Concept image</span><div><h3>Brake calipers</h3><p>Powder coating</p></div></div>
+      <div class="tile dark" data-kind="coat" style="background-color:#F2B705"><span class="tag">Concept image</span><div><h3>Racking and shelving</h3><p>Powder coating</p></div></div>
+      <div class="tile dark" data-kind="blast" style="background-color:#A8ACB0"><span class="tag">Concept image</span><div><h3>Rusted panels</h3><p>Sandblasting</p></div></div>
+      <div class="tile dark" data-kind="blast" style="background-color:#C9CBCC"><span class="tag">Concept image</span><div><h3>Old paint removed</h3><p>Sandblasting</p></div></div>
+      <div class="tile light" data-kind="coat" style="background-color:#3D4F5C"><span class="tag">Concept image</span><div><h3>Tools and fixtures</h3><p>Powder coating</p></div></div>
+      <div class="tile dark" data-kind="blast" style="background-color:#8E9296"><span class="tag">Concept image</span><div><h3>Chassis and brackets</h3><p>Sandblasting</p></div></div>
+      <div class="tile dark" data-kind="aqua" style="background-color:#7F9BA8"><span class="tag">Concept image</span><div><h3>Engine cases</h3><p>Aqua blasting</p></div></div>
+      <div class="tile dark" data-kind="aqua" style="background-color:#A9C0CB"><span class="tag">Concept image</span><div><h3>Aluminium parts</h3><p>Aqua blasting</p></div></div>
+    </div>
+  </section>
+
+  <section class="block" id="work" aria-labelledby="work-title">
+    <h2 id="work-title">Our work</h2>
+    <p class="sub">Finished jobs, before and after. Add your own photos here as jobs come in.</p>
+    <div class="grid3">
+      <div>
+        <div class="pair">
+          <div class="before"><small>[BEFORE PHOTO]</small><b>Before</b></div>
+          <div class="after"><small>[AFTER PHOTO]</small><b>After</b></div>
+        </div>
+        <div class="job-name">[Job name]</div>
+      </div>
+      <div>
+        <div class="pair">
+          <div class="before"><small>[BEFORE PHOTO]</small><b>Before</b></div>
+          <div class="after"><small>[AFTER PHOTO]</small><b>After</b></div>
+        </div>
+        <div class="job-name">[Job name]</div>
+      </div>
+      <div>
+        <div class="pair">
+          <div class="before"><small>[BEFORE PHOTO]</small><b>Before</b></div>
+          <div class="after"><small>[AFTER PHOTO]</small><b>After</b></div>
+        </div>
+        <div class="job-name">[Job name]</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block" id="services" aria-labelledby="services-title">
+    <h2 id="services-title">Services</h2>
+    <div class="services">
+      <div class="service dark-bg">
+        <h3>Powder coating</h3>
+        <p>Dry powder is sprayed on and baked into a hard, even finish that stands up to chips and wear better than most paint.</p>
+        <ul>
+          <li>Gloss, satin and matt finishes</li>
+          <li>A wide range of colours</li>
+          <li>Metal items up to [MAX ITEM SIZE]</li>
+        </ul>
+      </div>
+      <div class="service mid-bg">
+        <h3>Sandblasting</h3>
+        <p>Abrasive blasting strips rust, old paint and coatings back to bare metal, and gives the new finish a clean surface to grip.</p>
+        <ul>
+          <li>Rust and scale removal</li>
+          <li>Old paint and powder coat stripped</li>
+          <li>Blast only, or blast then coat</li>
+        </ul>
+      </div>
+      <div class="service light-bg">
+        <h3>Aqua blasting</h3>
+        <p>Fine media carried in water cleans and finishes metal more gently than dry blasting, with no dust and a smooth, even surface.</p>
+        <ul>
+          <li>Suits aluminium and delicate parts</li>
+          <li>Cleans without harsh surface damage</li>
+          <li>Aqua blast only, or aqua blast then coat</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <aside class="rev" aria-label="Motorbike work">
+    <div>
+      <h2>Restoring a motorbike?</h2>
+      <p>Motorbike work stays with Rev-Restore.</p>
+    </div>
+    <a class="btn" href="https://rev-restore.co.uk">Visit rev-restore.co.uk</a>
+  </aside>
+
+  <section class="block" id="quote" aria-labelledby="quote-title">
+    <div>
+      <h2 id="quote-title">Get a quote</h2>
+      <p class="sub">Tell us what you have, add a photo and pick a finish. We reply within [REPLY TIME].</p>
+    </div>
+
+    <!-- Point action at your form handler (Formspree, Netlify Forms, your own endpoint) -->
+    <form class="quote" id="quote-form" action="#" method="post" enctype="multipart/form-data">
+      <div class="row">
+        <label>Name <input type="text" name="name" autocomplete="name" required></label>
+        <label>Email <input type="email" name="email" autocomplete="email" required></label>
+      </div>
+      <div class="row">
+        <label>Item
+          <select name="item">
+            <option>Wheels</option>
+            <option>Frames</option>
+            <option>Gates and railings</option>
+            <option>Furniture</option>
+            <option>Other metal parts</option>
+          </select>
+        </label>
+        <label>Service
+          <select name="service">
+            <option>Powder coating</option>
+            <option>Sandblasting</option>
+            <option>Aqua blasting</option>
+            <option>Blasting then coating</option>
+          </select>
+        </label>
+      </div>
+      <label>Size, colour and finish <textarea name="details"></textarea></label>
+      <label>Photos of the item <input type="file" name="photos" accept="image/*" multiple></label>
+      <button class="btn big" type="submit">Send quote request</button>
+      <p class="form-note" id="form-note" role="status"></p>
+    </form>
+  </section>
+</main>
+
+<footer class="site">
+  <div>
+    <a class="logo" href="#top">Coat &amp; Blast</a>
+    <p>Powder coating, sandblasting and aqua blasting for everything except motorbikes.</p>
+    <p><a href="https://rev-restore.co.uk">Motorbike work: rev-restore.co.uk</a></p>
+  </div>
+  <address>
+    [PHONE]<br>
+    [EMAIL]<br>
+    [TOWN / AREA]
+  </address>
+</footer>
+
+<script>
+  // Before/after wheel slider
+  (function () {
+    var wrap = document.getElementById('wheel-slider');
+    var clip = document.getElementById('slider-clip');
+    var handle = document.getElementById('slider-handle');
+    var leftImg = document.getElementById('slider-left');
+    var rightImg = document.getElementById('slider-right');
+    var tagLeft = document.getElementById('tag-left');
+    var tagRight = document.getElementById('tag-right');
+    if (!wrap) return;
+
+    function setPos(pct) {
+      pct = Math.max(0, Math.min(100, pct));
+      clip.style.width = pct + '%';
+      handle.style.left = pct + '%';
+      handle.setAttribute('aria-valuenow', Math.round(pct));
+    }
+    function posFromEvent(e) {
+      var rect = wrap.getBoundingClientRect();
+      var x = (e.touches ? e.touches[0].clientX : e.clientX) - rect.left;
+      return (x / rect.width) * 100;
+    }
+    var dragging = false;
+    handle.addEventListener('pointerdown', function (e) { dragging = true; handle.setPointerCapture(e.pointerId); });
+    wrap.addEventListener('pointermove', function (e) { if (dragging) setPos(posFromEvent(e)); });
+    handle.addEventListener('pointerup', function () { dragging = false; });
+    wrap.addEventListener('click', function (e) { if (e.target === handle) return; setPos(posFromEvent(e)); });
+    handle.addEventListener('keydown', function (e) {
+      var current = parseFloat(handle.style.left) || 50;
+      if (e.key === 'ArrowLeft') setPos(current - 5);
+      if (e.key === 'ArrowRight') setPos(current + 5);
+    });
+
+    // Stage picker: swap which two images are being compared
+    var buttons = document.querySelectorAll('.stage-picker button');
+    buttons.forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        buttons.forEach(function (b) { b.setAttribute('aria-pressed', b === btn ? 'true' : 'false'); });
+        leftImg.src = 'img/' + btn.getAttribute('data-left');
+        rightImg.src = 'img/' + btn.getAttribute('data-right');
+        tagLeft.textContent = btn.getAttribute('data-ll');
+        tagRight.textContent = btn.getAttribute('data-rl');
+        setPos(50);
+      });
+    });
+  })();
+
+  // Gallery filter
+  (function () {
+    var chips = document.querySelectorAll('.chip');
+    var tiles = document.querySelectorAll('.tile');
+    chips.forEach(function (chip) {
+      chip.addEventListener('click', function () {
+        var f = chip.getAttribute('data-filter');
+        chips.forEach(function (c) { c.setAttribute('aria-pressed', c === chip ? 'true' : 'false'); });
+        tiles.forEach(function (t) {
+          t.hidden = !(f === 'all' || t.getAttribute('data-kind') === f);
+        });
+      });
+    });
+  })();
+
+  // Quote form: placeholder until you connect a real endpoint
+  document.getElementById('quote-form').addEventListener('submit', function (e) {
+    if (this.getAttribute('action') === '#') {
+      e.preventDefault();
+      document.getElementById('form-note').textContent = 'Form not connected yet. Set the form action to your handler.';
+    }
+  });
+</script>
+</body>
+</html>
