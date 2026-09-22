@@ -61,6 +61,8 @@
   .track-labels { display: flex; justify-content: space-between; margin-top: 10px; }
   .track-labels span { font-size: 15px; font-weight: 600; color: #D5D7D8; }
   .track-labels span.active { color: var(--chalk); }
+  .stage-desc { margin-top: 20px; max-width: 540px; font-size: 17px; line-height: 1.6; color: #D5D7D8; min-height: 3.4em; transition: opacity .22s ease; }
+  .stage-desc.fading { opacity: 0; }
 
   /* Sections */
   section.block { padding: 88px var(--pad); }
@@ -180,6 +182,8 @@
         <span id="lbl-blasted">Blasted</span>
         <span id="lbl-coated">Coated</span>
       </div>
+      <!-- Text swaps and fades with the nearest image stage. Edit the wording in the descriptions object in the script below. -->
+      <p class="stage-desc" id="stage-desc">Years of rust and old paint sitting on bare steel. This is what most items look like before they reach us.</p>
     </div>
   </section>
 
@@ -345,6 +349,18 @@
     var lblRusty = document.getElementById('lbl-rusty');
     var lblBlasted = document.getElementById('lbl-blasted');
     var lblCoated = document.getElementById('lbl-coated');
+    var stageDesc = document.getElementById('stage-desc');
+    var descriptions = {
+      rusty: 'Years of rust and old paint sitting on bare steel. This is what most items look like before they reach us.',
+      blasted: 'Sandblasted back to clean, bare metal. Every trace of rust and old coating is gone, leaving a surface the new finish can properly grip.',
+      coated: 'Finished in a tough, even powder coat. It resists chips and wear far better than paint, and it\u2019s ready to go straight back on.'
+    };
+    var lastStage = null;
+    function stageFromPct(pct) {
+      if (pct < 33) return 'rusty';
+      if (pct <= 67) return 'blasted';
+      return 'coated';
+    }
     if (!wrap) return;
 
     function setPos(pct) {
@@ -373,6 +389,16 @@
       lblRusty.classList.toggle('active', pct < 33);
       lblBlasted.classList.toggle('active', pct >= 33 && pct <= 67);
       lblCoated.classList.toggle('active', pct > 67);
+
+      var stage = stageFromPct(pct);
+      if (stage !== lastStage) {
+        lastStage = stage;
+        stageDesc.classList.add('fading');
+        setTimeout(function () {
+          stageDesc.textContent = descriptions[stage];
+          stageDesc.classList.remove('fading');
+        }, 160);
+      }
     }
     function posFromEvent(e) {
       var rect = wrap.getBoundingClientRect();
@@ -408,12 +434,38 @@
     });
   })();
 
-  // Quote form: placeholder until you connect a real endpoint
+  // Quote form → Cloudflare Worker → Telegram
+  // Replace WORKER_URL with the one from your Worker's overview page.
+  var WORKER_URL = 'https://coat-blast-quotes.YOUR-SUBDOMAIN.workers.dev';
+
   document.getElementById('quote-form').addEventListener('submit', function (e) {
-    if (this.getAttribute('action') === '#') {
-      e.preventDefault();
-      document.getElementById('form-note').textContent = 'Form not connected yet. Set the form action to your handler.';
+    e.preventDefault();
+    var form = this;
+    var note = document.getElementById('form-note');
+    var btn = form.querySelector('button[type="submit"]');
+
+    if (WORKER_URL.indexOf('YOUR-SUBDOMAIN') !== -1) {
+      note.textContent = 'Form not connected yet — set WORKER_URL in the script to your deployed Worker address.';
+      return;
     }
+
+    btn.disabled = true;
+    note.textContent = 'Sending...';
+
+    fetch(WORKER_URL, { method: 'POST', body: new FormData(form) })
+      .then(function (res) { return res.json().then(function (data) { return { ok: res.ok, data: data }; }); })
+      .then(function (result) {
+        if (result.ok && result.data.ok) {
+          note.textContent = 'Thanks — your quote request has been sent. We\u2019ll reply within [REPLY TIME].';
+          form.reset();
+        } else {
+          note.textContent = 'Something went wrong sending that. Please try again or email us directly.';
+        }
+      })
+      .catch(function () {
+        note.textContent = 'Couldn\u2019t reach the server. Check your connection and try again.';
+      })
+      .finally(function () { btn.disabled = false; });
   });
 </script>
 </body>
