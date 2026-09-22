@@ -47,18 +47,20 @@
   .hero h1 { font-size: clamp(56px, 8vw, 104px); line-height: .95; }
   .hero p.lead { margin-top: 28px; max-width: 560px; font-size: 21px; color: #D5D7D8; }
   .hero .actions { margin-top: 28px; display: flex; gap: 16px; flex-wrap: wrap; }
-  /* Rusty / blasted / coated slider */
+  /* Rusty / blasted / coated 3-way fade slider */
   .slider { position: relative; width: 100%; max-width: 528px; aspect-ratio: 1 / 1; border-radius: 4px; overflow: hidden; background: #1a1c1e; touch-action: none; user-select: none; }
   .slider img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; pointer-events: none; }
-  .slider .clip { position: absolute; inset: 0; overflow: hidden; }
-  .slider .handle { position: absolute; top: 0; bottom: 0; width: 3px; background: var(--chalk); box-shadow: 0 0 0 1px rgba(0,0,0,.3); cursor: ew-resize; }
+  .slider img.stage-rusty { z-index: 1; }
+  .slider img.stage-blasted { z-index: 2; }
+  .slider img.stage-coated { z-index: 3; }
+  .slider .handle { position: absolute; top: 0; bottom: 0; width: 3px; background: var(--chalk); box-shadow: 0 0 0 1px rgba(0,0,0,.3); cursor: ew-resize; z-index: 4; }
   .slider .handle::after { content: '↔'; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 44px; height: 44px; border-radius: 50%; background: var(--chalk); color: var(--ink); display: flex; align-items: center; justify-content: center; font-size: 18px; box-shadow: 0 2px 8px rgba(0,0,0,.35); }
-  .slider .tag-lbl { position: absolute; bottom: 14px; padding: 6px 14px; border-radius: 999px; font: 600 14px var(--body); background: rgba(30,33,36,.72); color: var(--chalk); }
-  .slider .tag-left { left: 14px; }
-  .slider .tag-right { right: 14px; }
-  .stage-picker { margin-top: 16px; display: flex; gap: 10px; }
-  .stage-picker button { min-height: 40px; padding: 0 18px; border-radius: 999px; border: 1px solid #6B7075; background: transparent; color: var(--chalk); font: 600 15px var(--body); cursor: pointer; }
-  .stage-picker button[aria-pressed="true"] { background: var(--chalk); color: var(--ink); border-color: var(--chalk); }
+  .slider .tag-lbl { position: absolute; bottom: 14px; padding: 6px 14px; border-radius: 999px; font: 600 14px var(--body); background: rgba(30,33,36,.72); color: var(--chalk); z-index: 5; transition: opacity .1s linear; }
+  .slider-track { position: relative; margin-top: 14px; height: 4px; border-radius: 999px; background: #4A4F54; }
+  .slider-track .fill { position: absolute; top: 0; left: 0; bottom: 0; background: var(--accent); border-radius: 999px; }
+  .track-labels { display: flex; justify-content: space-between; margin-top: 10px; }
+  .track-labels span { font-size: 15px; font-weight: 600; color: #D5D7D8; }
+  .track-labels span.active { color: var(--chalk); }
 
   /* Sections */
   section.block { padding: 88px var(--pad); }
@@ -163,22 +165,20 @@
         <a class="btn big ghost" href="#gallery">See the gallery</a>
       </div>
     </div>
-    <!-- To use real photos: add style="background-image:url(img/rusty.jpg)" to each panel and delete the [YOUR PHOTO] labels -->
+    <!-- Drag/tap to fade through all three stages. Swap img sources in img/ for your own real photos later. -->
     <div>
-      <!-- Drag/tap the handle to compare. Swap img sources in img/ for your own real photos later. -->
-      <div class="slider" id="wheel-slider" aria-label="Drag to compare the wheel before and after">
-        <img id="slider-right" src="img/wheel-coated.png" alt="Wheel finished in gloss black powder coat">
-        <span class="tag-lbl tag-right" id="tag-right">Coated</span>
-        <div class="clip" id="slider-clip" style="width:50%">
-          <img id="slider-left" src="img/wheel-rusty.png" alt="Rusted steel wheel before treatment">
-          <span class="tag-lbl tag-left" id="tag-left">Rusty</span>
-        </div>
-        <div class="handle" id="slider-handle" style="left:50%" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50" tabindex="0"></div>
+      <div class="slider" id="wheel-slider" aria-label="Drag to fade the wheel through rusty, blasted and coated">
+        <img class="stage-rusty" src="img/wheel-rusty.png" alt="Rusted steel wheel before treatment" style="opacity:1">
+        <img class="stage-blasted" src="img/wheel-blasted.png" alt="Wheel sandblasted to bare metal" style="opacity:0">
+        <img class="stage-coated" src="img/wheel-coated.png" alt="Wheel finished in gloss black powder coat" style="opacity:0">
+        <span class="tag-lbl" id="stage-tag" style="left:14px">Rusty</span>
+        <div class="handle" id="slider-handle" style="left:0%" role="slider" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Restoration stage" tabindex="0"></div>
       </div>
-      <div class="stage-picker" role="group" aria-label="Choose stages to compare">
-        <button type="button" data-left="wheel-rusty.png" data-right="wheel-blasted.png" data-ll="Rusty" data-rl="Blasted">Rusty → Blasted</button>
-        <button type="button" data-left="wheel-blasted.png" data-right="wheel-coated.png" data-ll="Blasted" data-rl="Coated">Blasted → Coated</button>
-        <button type="button" data-left="wheel-rusty.png" data-right="wheel-coated.png" data-ll="Rusty" data-rl="Coated" aria-pressed="true">Rusty → Coated</button>
+      <div class="slider-track" id="slider-track"><div class="fill" id="slider-fill" style="width:0%"></div></div>
+      <div class="track-labels">
+        <span id="lbl-rusty" class="active">Rusty</span>
+        <span id="lbl-blasted">Blasted</span>
+        <span id="lbl-coated">Coated</span>
       </div>
     </div>
   </section>
@@ -333,22 +333,46 @@
 </footer>
 
 <script>
-  // Before/after wheel slider
+  // Rusty / blasted / coated 3-way fade slider
   (function () {
     var wrap = document.getElementById('wheel-slider');
-    var clip = document.getElementById('slider-clip');
     var handle = document.getElementById('slider-handle');
-    var leftImg = document.getElementById('slider-left');
-    var rightImg = document.getElementById('slider-right');
-    var tagLeft = document.getElementById('tag-left');
-    var tagRight = document.getElementById('tag-right');
+    var fill = document.getElementById('slider-fill');
+    var tag = document.getElementById('stage-tag');
+    var rustyImg = wrap ? wrap.querySelector('.stage-rusty') : null;
+    var blastedImg = wrap ? wrap.querySelector('.stage-blasted') : null;
+    var coatedImg = wrap ? wrap.querySelector('.stage-coated') : null;
+    var lblRusty = document.getElementById('lbl-rusty');
+    var lblBlasted = document.getElementById('lbl-blasted');
+    var lblCoated = document.getElementById('lbl-coated');
     if (!wrap) return;
 
     function setPos(pct) {
       pct = Math.max(0, Math.min(100, pct));
-      clip.style.width = pct + '%';
       handle.style.left = pct + '%';
+      fill.style.width = pct + '%';
       handle.setAttribute('aria-valuenow', Math.round(pct));
+
+      var rustyOp, blastedOp, coatedOp, label;
+      if (pct <= 50) {
+        var t = pct / 50; // 0..1 across rusty→blasted
+        rustyOp = 1 - t; blastedOp = t; coatedOp = 0;
+        label = t < 0.5 ? 'Rusty' : (t === 0.5 ? 'Halfway' : 'Blasted');
+      } else {
+        var t2 = (pct - 50) / 50; // 0..1 across blasted→coated
+        rustyOp = 0; blastedOp = 1 - t2; coatedOp = t2;
+        label = t2 < 0.5 ? 'Blasted' : (t2 === 0.5 ? 'Halfway' : 'Coated');
+      }
+      rustyImg.style.opacity = rustyOp;
+      blastedImg.style.opacity = blastedOp;
+      coatedImg.style.opacity = coatedOp;
+      tag.textContent = label;
+      tag.style.left = pct < 85 ? (pct + 2) + '%' : 'auto';
+      tag.style.right = pct >= 85 ? '14px' : 'auto';
+
+      lblRusty.classList.toggle('active', pct < 33);
+      lblBlasted.classList.toggle('active', pct >= 33 && pct <= 67);
+      lblCoated.classList.toggle('active', pct > 67);
     }
     function posFromEvent(e) {
       var rect = wrap.getBoundingClientRect();
@@ -361,23 +385,12 @@
     handle.addEventListener('pointerup', function () { dragging = false; });
     wrap.addEventListener('click', function (e) { if (e.target === handle) return; setPos(posFromEvent(e)); });
     handle.addEventListener('keydown', function (e) {
-      var current = parseFloat(handle.style.left) || 50;
+      var current = parseFloat(handle.style.left) || 0;
       if (e.key === 'ArrowLeft') setPos(current - 5);
       if (e.key === 'ArrowRight') setPos(current + 5);
     });
 
-    // Stage picker: swap which two images are being compared
-    var buttons = document.querySelectorAll('.stage-picker button');
-    buttons.forEach(function (btn) {
-      btn.addEventListener('click', function () {
-        buttons.forEach(function (b) { b.setAttribute('aria-pressed', b === btn ? 'true' : 'false'); });
-        leftImg.src = 'img/' + btn.getAttribute('data-left');
-        rightImg.src = 'img/' + btn.getAttribute('data-right');
-        tagLeft.textContent = btn.getAttribute('data-ll');
-        tagRight.textContent = btn.getAttribute('data-rl');
-        setPos(50);
-      });
-    });
+    setPos(0);
   })();
 
   // Gallery filter
